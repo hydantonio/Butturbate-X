@@ -1,2 +1,1 @@
-
-:root{ --brand-grad: linear-gradient(90deg,#ff6ec7, #6ea8ff); --ink:#0a0d14; --bg:#f6f8fc; --br:#e6e9f2; }
+:root{--brand1:#ff7ad9;--brand2:#7eb5ff;--ink:#0a0d14;--bg:#f7f8fb;--br:#e6e9f2;--pill:linear-gradient(90deg,var(--brand1),var(--brand2));--accent-shadow:0 6px 18px rgba(60,80,130,.12)}

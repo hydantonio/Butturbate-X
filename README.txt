@@ -1,17 +1,21 @@
 
-BCX Click Fix
-=============
-1) Copia i file in:
-   - web/css/click-fix.css
-   - web/js/click-fix.js
-2) Includi in control.html (e in overlay.html se serve l'anteprima) PRIMA di chiudere </head> e </body>:
+Butturbate-X — Mappings Pulse + Drag Ease
+========================================
+Questa patch aggiunge:
+- MAPPINGS avanzati con pattern: **steady**, **pulse** (freq/duty), **ramp** (start→end), **pattern** (array JSON [value,ms]).
+- Il client Intiface suona i pattern (multi-device) e ferma in sicurezza.
+- Drag&drop/drag-move dell'overlay più fluido: offset del puntatore, snap alla griglia (se attiva), scale-correct.
 
-   <link rel="stylesheet" href="/css/click-fix.css">
-   ...
-   <script src="/js/click-fix.js"></script>
+File da sostituire nella tua repo:
+- web/js/intiface.js
+- server/index.js
+- Incolla `control.patch.js` nel tuo `control.html` (dopo che hai definito lo `socket` e la canvas).
+  Oppure includi come script a fondo pagina:
+    <script src="/js/control.patch.js"></script>
 
-Cosa risolve:
-- La canvas (.canvas-abs) non invade più la colonna di destra: è vincolata a 1920x1080 e scalata alla larghezza della .stage.
-- Gli strati non interattivi (.grid, .glow, .canvas-abs) non intercettano più i click.
-- Solo gli elementi (.element) restano drag/click.
-- La colonna destra ha z-index alto e riceve i click normalmente.
+Uso rapido:
+- In "Mappings" crea una riga → scegli il tipo (steady/pulse/ramp/pattern) → compila i parametri.
+- Premi "Tip test 50" / "Emit Tip 100" per verificare: vedrai vibrazioni corrispondenti e goal aggiornarsi.
+- Per drag facile: attiva la griglia (20 px di default). Il movimento è con offset corretto e non “scivola”.
+
+Nota: la goal bar va aggiunta con "Add Tip Goal" e si sposta **da Control** (non dall'overlay in OBS).

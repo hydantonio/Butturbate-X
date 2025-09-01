@@ -1,1 +1,1 @@
-{"name":"buttcaster-complete-fix","private":true,"type":"commonjs","scripts":{"start":"node server/index.js","start:debug":"node --trace-uncaught --unhandled-rejections=strict server/index.js"},"dependencies":{"cors":"^2.8.5","express":"^4.21.2","socket.io":"^4.8.1"}}
+{"name":"butturbate-x-fixed","private":true,"type":"commonjs","scripts":{"start":"node server/index.js","start:debug":"node --trace-uncaught --unhandled-rejections=strict server/index.js"},"dependencies":{"cors":"^2.8.5","express":"^4.21.2","socket.io":"^4.8.1"}}

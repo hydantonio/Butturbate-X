@@ -1,0 +1,1 @@
+setTimeout(function(){try{location.replace('control.html')}catch(_){location.href='control.html'}},2000); setTimeout(function(){location.href='control.html'},5000);

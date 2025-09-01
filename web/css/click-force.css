@@ -1,0 +1,9 @@
+
+:root{--z-ui:9999;--z-stage:100}
+.stage-wrap,.stage{position:relative!important;overflow:hidden!important;isolation:isolate!important}
+.grid,.glow,.canvas-abs{pointer-events:none!important}
+.canvas-abs .element,.stage .element{pointer-events:auto!important}
+.sidebar,.right{position:relative!important;z-index:var(--z-ui)!important;pointer-events:auto!important}
+.view.section{position:relative!important;z-index:calc(var(--z-ui)-1)!important}
+body>.overlay,body>.backdrop,body>.modal,body>.veil{pointer-events:none!important}
+.right .section{position:relative!important}
