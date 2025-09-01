@@ -1,0 +1,30 @@
+
+/* click-fix.css — confines canvas to stage and prevents overlay layers from blocking UI */
+.stage-wrap, .stage {
+  position: relative !important;
+}
+.stage {
+  overflow: hidden !important;
+}
+
+/* Ensure overlay canvas doesn't extend over sidebars */
+.canvas-abs {
+  position: absolute !important;
+  left: 0; top: 0;
+  width: 1920px !important;
+  height: 1080px !important;
+  min-width: 0 !important;
+  transform-origin: 0 0 !important;
+}
+
+/* Don't let non-interactive layers intercept clicks */
+.grid, .glow, .canvas-abs {
+  pointer-events: none !important;
+}
+/* But elements remain draggable/clickable */
+.canvas-abs .element, .stage .element {
+  pointer-events: auto !important;
+}
+
+/* Make the right column always clickable above anything */
+.right { position: relative !important; z-index: 20 !important; pointer-events: auto !important; }

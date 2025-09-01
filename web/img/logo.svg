@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="64" viewBox="0 0 256 64">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7ad9"/><stop offset="1" stop-color="#7eb5ff"/></linearGradient></defs>
+<rect rx="12" ry="12" width="64" height="64" fill="url(#g)"/><circle cx="32" cy="32" r="14" fill="#0a0d14" opacity=".12"/>
+<text x="80" y="40" fill="#0a0d14" font-size="26" font-family="Calibri,Segoe UI,Arial" font-weight="900">ButtCaster</text>
+</svg>

@@ -1,0 +1,2 @@
+/* --- ensure no scrollbars inside iframe --- */
+html, body { overflow: hidden; }

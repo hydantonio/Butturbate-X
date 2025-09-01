@@ -1,0 +1,47 @@
+[
+  {
+    "id": "el-title",
+    "left": 40,
+    "top": 40,
+    "width": 354,
+    "height": 106,
+    "z": 0,
+    "rotate": 0,
+    "opacity": 1,
+    "kind": "text",
+    "value": 0,
+    "max": 100,
+    "text": "ButtCaster Overlay",
+    "styles": {
+      "bg": null,
+      "color": null,
+      "radius": null,
+      "boxShadow": null,
+      "fontSize": null,
+      "fontWeight": null,
+      "align": null
+    }
+  },
+  {
+    "id": "el-goal",
+    "left": 740,
+    "top": 620,
+    "width": 354,
+    "height": 106,
+    "z": 0,
+    "rotate": 0,
+    "opacity": 1,
+    "kind": "goal",
+    "value": 0,
+    "max": 100,
+    "styles": {
+      "bg": null,
+      "color": null,
+      "radius": null,
+      "boxShadow": null,
+      "fontSize": null,
+      "fontWeight": null,
+      "align": null
+    }
+  }
+]

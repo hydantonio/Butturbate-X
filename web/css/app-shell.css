@@ -1,0 +1,28 @@
+
+:root{ --panel:#fff; --ink:#0b1020; --muted:#687386; --bg:#f5f7fb; --brand:#ff7ac8; --brand2:#9ad8ff; }
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,Segoe UI,Roboto,Calibri,sans-serif;}
+*{box-sizing:border-box}
+.app-shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+.sidebar{background:#151b28;color:#d8deea;display:flex;flex-direction:column;padding:14px;gap:8px;}
+.sidebar .logo{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:#0f1522;}
+.sidebar .logo img{width:22px;height:22px}
+.nav{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.nav .item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:#cfd6e6;cursor:pointer;user-select:none;}
+.nav .item svg{opacity:.85}
+.nav .item.active{background:#20283a;color:#fff}
+.nav .item:hover{background:#1b2233}
+.main{display:flex;flex-direction:column;}
+.topbar{height:56px;background:#fff;border-bottom:1px solid #e6e9f2;display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;z-index:10;}
+.cards{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;padding:16px;align-items:start;}
+.card{background:#fff;border:1px solid #e6e9f2;border-radius:14px;box-shadow:0 8px 26px rgba(60,80,130,.08);padding:14px;}
+.btn{border:1px solid #e6e9f2;border-radius:10px;padding:8px 10px;background:#fff;font-weight:800;cursor:pointer;}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid #e6e9f2;border-radius:12px;padding:6px 10px;background:#fff;font-weight:800;}
+.input{padding:8px 10px;border:1px solid #e6e9f2;border-radius:10px;font-weight:700;}
+.list{list-style:none;padding-left:0;margin:0;display:grid;gap:8px;}
+.list .row{display:flex;gap:8px;align-items:center;}
+.preview{aspect-ratio:16/9;background:#0b0e14;border-radius:12px;position:relative;overflow:hidden;}
+.preview iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#111;}
+.tabbar{display:flex;gap:10px;border-bottom:1px solid #e6e9f2;margin-bottom:10px;}
+.tabbar .tab{padding:8px 10px;border-radius:10px;cursor:pointer;}
+.tabbar .tab.active{background:#f0f2f7;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}

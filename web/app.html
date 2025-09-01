@@ -1,0 +1,292 @@
+
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ButtCaster • Studio</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230f1320'/%3E%3Ccircle cx='24' cy='24' r='10' fill='%239ad8ff'/%3E%3Ccircle cx='40' cy='40' r='10' fill='%23ff7ac8'/%3E%3C/svg%3E">
+  <style>
+    :root{ --bg:#0b0e14; --panel:#0f1320; --ink:#e6eefc; --muted:#8892a6; --brand1:#ff7ac8; --brand2:#9ad8ff; --shadow:0 12px 40px rgba(10,15,30,.3) }
+    *{ box-sizing:border-box }
+    html,body{ height:100%; margin:0; background:var(--bg); color:var(--ink); font:14px/1.5 Inter,system-ui,Segoe UI,Roboto,Calibri,sans-serif }
+    .app{ display:grid; grid-template-columns: 300px 1fr 360px; min-height:100vh; }
+    .left,.right{ background:var(--panel); border:1px solid #161a2b; padding:14px; position:sticky; top:0; height:100vh; overflow:auto }
+    .center{ padding:14px; overflow:auto }
+    .btn{ cursor:pointer; border:1px solid #1c2240; border-radius:12px; padding:10px 12px; background:#12182c; box-shadow:var(--shadow); font-weight:800; color:var(--ink) }
+    .btn:active{ transform:translateY(1px) }
+    .row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center }
+    .stack{ display:flex; flex-direction:column; gap:8px }
+    .group{ margin-bottom:14px }
+    .label{ font-weight:900; color:#9aa7c1; margin-bottom:6px }
+    .input,select{ width:100%; padding:8px 10px; border-radius:10px; border:1px solid #1c2240; background:#0b1024; color:var(--ink); font-weight:700 }
+    .preview-wrapper{ width:960px; height:540px; overflow:hidden; background:#060a18; border-radius:12px; box-shadow: inset 0 0 0 1px #0f1220; position:relative }
+    .preview-scale{ transform-origin:0 0; width:1920px; height:1080px; border:0; display:block; transform: scale(.5); position:absolute; top:0; left:0 }
+    .obs-bg{ position:absolute; top:0; left:0; width:1920px; height:1080px; transform:scale(.5); transform-origin:0 0; object-fit:cover; filter:brightness(.9) saturate(.95); pointer-events:none; }
+    .spacer{ height:16px }
+    .badge{ position:fixed; top:10px; right:12px; background:#12182c; border:1px solid #1c2240; padding:6px 10px; border-radius:999px; font-weight:900; box-shadow:var(--shadow) }
+    .ok{ background:#36c275; } .muted{ background:#c7cbd6; }
+    .subtle{ color:var(--muted); font-size:12px }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="left">
+      <div class="group">
+        <div class="label">OBS preview</div>
+        <div class="stack">
+          <input id="obs-url" class="input" value="ws://127.0.0.1:4455" placeholder="ws://host:4455">
+          <input id="obs-pass" class="input" type="password" placeholder="password (se impostata)">
+          <div class="row">
+            <button id="obs-connect" class="btn">Connect</button>
+            <button id="obs-disconnect" class="btn">Disconnect</button>
+          </div>
+          <div class="row">
+            <label class="row" style="gap:6px"><input id="obs-bg-toggle" type="checkbox"> Usa come sfondo</label>
+            <input id="obs-fps" class="input" type="number" value="2" style="width:80px" title="Aggiornamenti al secondo (1-5)">
+          </div>
+          <div class="subtle">Usa GetSourceScreenshot via obs-websocket 5.x</div>
+        </div>
+      </div>
+
+      <div class="stack group">
+        <div class="row">
+          <button id="v-lock" class="btn">Lock canvas</button>
+          <button id="v-dup" class="btn">Duplicate</button>
+        </div>
+        <div class="row">
+          <button id="v-del" class="btn">Delete</button>
+          <button id="v-undo" class="btn">Undo</button>
+          <button id="v-redo" class="btn">Redo</button>
+        </div>
+        <div class="row">
+          <button id="v-save" class="btn">Save</button>
+          <button id="v-push" class="btn">Push to OBS</button>
+        </div>
+        <div class="row"><button id="v-load" class="btn" style="width:100%">Load</button></div>
+      </div>
+
+      <div class="group">
+        <div class="label">Elements</div>
+        <div class="row">
+          <button id="v-add-text" class="btn">+ Text</button>
+          <button id="v-add-pill" class="btn">+ Pill</button>
+          <button id="v-add-goal" class="btn">+ Goal</button>
+        </div>
+        <div class="row">
+          <button id="v-add-img" class="btn">+ Image</button>
+          <button id="v-add-ring" class="btn">+ Ring</button>
+        </div>
+        <div class="row">
+          <button id="v-add-alert" class="btn">+ Alert</button>
+          <button id="v-add-ticker" class="btn">+ Ticker</button>
+        </div>
+        <div class="row">
+          <button id="v-add-countdown" class="btn">+ Countdown</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="row">
+          <label class="row" style="gap:6px"><input id="v-grid" type="checkbox" checked> Grid</label>
+          <input id="v-snap" class="input" type="number" value="20" style="width:80px">
+        </div>
+      </div>
+    </aside>
+
+    <main class="center">
+      <div class="preview-wrapper">
+        <img id="obs-bg" class="obs-bg" alt="" hidden>
+        <iframe id="v-iframe" class="preview-scale" src="/web/overlay_editor.html"></iframe>
+      </div>
+      <div class="spacer"></div>
+      <div class="badge" id="ol-badge"><span id="ol-dot" class="muted" style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle"></span><span id="ol-txt">editor: offline</span></div>
+    </main>
+
+    <aside class="right">
+      <div class="group">
+        <div class="label">Properties</div>
+        <div class="stack">
+          <div class="label">Style</div>
+          <input id="p-text" class="input" placeholder="Text">
+          <button id="p-set" class="btn">Set</button>
+          <label>Text color</label><input id="p-color" class="input" type="color" value="#ffffff">
+          <label>BG</label><input id="p-bg" class="input" type="color" value="#111111">
+          <label>Grad A</label><input id="p-grad1" class="input" type="color" value="#ff7ac8">
+          <label>Grad B</label><input id="p-grad2" class="input" type="color" value="#9ad8ff">
+          <label>Radius</label><input id="p-radius" class="input" type="number" value="16">
+          <label>Shadow</label><input id="p-shadow" class="input" type="number" value="30">
+          <label>Font size</label><input id="p-fsize" class="input" type="number" value="16">
+          <label>Weight</label><select id="p-fweight" class="input"><option>400</option><option>600</option><option selected>800</option><option>900</option></select>
+          <label>Ticker speed (s)</label><input id="p-speed" class="input" type="number" value="20">
+          <label>Align</label><select id="p-align" class="input"><option>left</option><option selected>center</option><option>right</option></select>
+          <button id="p-style-apply" class="btn">Apply Style</button>
+        </div>
+
+        <div class="stack" style="margin-top:14px">
+          <label>Left (px)</label><input id="p-left" class="input" type="number">
+          <label>Top (px)</label><input id="p-top" class="input" type="number">
+          <label>Width (px)</label><input id="p-width" class="input" type="number">
+          <label>Height (px)</label><input id="p-height" class="input" type="number">
+          <label>Z-index</label><input id="p-z" class="input" type="number" value="0">
+          <label>Rotate (deg)</label><input id="p-rot" class="input" type="number" value="0">
+          <label>Opacity (0-1)</label><input id="p-op" class="input" type="number" step="0.05" min="0" max="1" value="1">
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<script>
+(function(){
+  const $ = (id)=>document.getElementById(id);
+  const iframe = $('v-iframe');
+  const obsBg = $('obs-bg');
+  const send = (msg)=> { if(iframe && iframe.contentWindow){ iframe.contentWindow.postMessage(msg, '*'); } };
+  let selectedId = null;
+  let locked = false;
+
+  // Handshake & selection feed
+  window.addEventListener('message', (e)=>{
+    const d = e.data || {};
+    if(d.type==='editor:hello'){
+      document.getElementById('ol-dot').className='ok';
+      document.getElementById('ol-txt').textContent='editor: online';
+      send({type:'editor:grid', on: $('v-grid').checked});
+      send({type:'editor:snap', size: Number($('v-snap').value)||20});
+    } else if(d.type==='editor:select'){
+      selectedId = d.id;
+      $('p-left').value = d.left; $('p-top').value = d.top;
+      $('p-width').value = d.width; $('p-height').value = d.height;
+      $('p-z').value = d.z; $('p-rot').value = d.rotate; $('p-op').value = d.opacity;
+    }
+  });
+
+  // Actions to editor iframe
+  $('v-lock').addEventListener('click', ()=>{ locked = !locked; $('v-lock').textContent = locked ? 'Unlock canvas' : 'Lock canvas'; send({type:'editor:lock', lock: locked}); });
+  $('v-dup').addEventListener('click', ()=> send({type:'editor:dup'}));
+  $('v-del').addEventListener('click', ()=> send({type:'editor:del'}));
+  $('v-undo').addEventListener('click', ()=> send({type:'editor:undo'}));
+  $('v-redo').addEventListener('click', ()=> send({type:'editor:redo'}));
+  $('v-save').addEventListener('click', ()=> send({type:'editor:save'}));
+  $('v-load').addEventListener('click', ()=> send({type:'editor:load'}));
+  $('v-push').addEventListener('click', async ()=>{
+    try{
+      const r = await fetch('/api/layout'); const j = r.ok?await r.json():null;
+      await fetch('/api/overlay/push',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'layout', layout:j})});
+    }catch(e){ console.warn('push overlay fallback'); }
+  });
+
+  $('v-grid').addEventListener('change', (e)=> send({type:'editor:grid', on: e.target.checked}));
+  $('v-snap').addEventListener('input', (e)=> send({type:'editor:snap', size: Number(e.target.value)||20 }));
+
+  const add = (id, kind)=> $(id).addEventListener('click', ()=> send({type:'editor:add', kind}));
+  add('v-add-text','text'); add('v-add-pill','pill'); add('v-add-goal','goal');
+  add('v-add-img','image'); add('v-add-ring','ring'); add('v-add-alert','alert');
+  add('v-add-ticker','ticker'); add('v-add-countdown','countdown'); // <-- fixed: no stray parenthesis
+
+  $('p-set').addEventListener('click', ()=>{
+    if(!selectedId) return;
+    send({type:'editor:set', id:selectedId, values:{ text: $('p-text').value }});
+  });
+  $('p-style-apply').addEventListener('click', ()=>{
+    if(!selectedId) return;
+    send({type:'editor:set', id:selectedId, values:{
+      text: $('p-text').value,
+      textColor: $('p-color').value, bg: $('p-bg').value,
+      gradStart: $('p-grad1').value, gradEnd: $('p-grad2').value,
+      radius: +$('p-radius').value || 16, shadow: +$('p-shadow').value || 30,
+      fontSize: +$('p-fsize').value || 16, fontWeight: $('p-fweight').value,
+      align: $('p-align').value, speed: +$('p-speed').value || 20
+    }});
+  });
+
+  const link = (id,key)=> $(id).addEventListener('input', ()=>{
+    if(!selectedId) return; const v={}; v[key]= Number($(id).value); send({type:'editor:set', id:selectedId, values:v});
+  });
+  link('p-left','left'); link('p-top','top'); link('p-width','width'); link('p-height','height');
+  link('p-z','z'); link('p-rot','rotate'); link('p-op','opacity');
+
+  // ==== OBS WEBSOCKET PREVIEW ====
+  let sock = null, rpc = 1, session = null, timer = null, sceneName = null;
+
+  function b64(buf){ return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+  async function sha256(s){ const enc=new TextEncoder(); const data=enc.encode(s); const d=await crypto.subtle.digest('SHA-256', data); return b64(d); }
+
+  function sendFrame(obj){
+    if(sock && sock.readyState===1){ sock.send(JSON.stringify(obj)); }
+  }
+  function request(type, data={}){
+    const id = 'r'+(rpc++);
+    sendFrame({op:6, d:{requestType:type, requestId:id, requestData:data}});
+    return id;
+  }
+
+  function stopObs(){
+    if(timer){ clearInterval(timer); timer=null; }
+    if(sock){ try{ sock.close(); }catch(_){} }
+    sock=null; session=null; sceneName=null;
+    $('obs-connect').disabled=false; $('obs-disconnect').disabled=true;
+  }
+
+  $('obs-disconnect').addEventListener('click', stopObs);
+
+  $('obs-connect').addEventListener('click', async ()=>{
+    try{
+      stopObs();
+      sock = new WebSocket(($('obs-url').value||'ws://127.0.0.1:4455').trim());
+      $('obs-connect').disabled=true; $('obs-disconnect').disabled=false;
+      sock.onmessage = async (ev)=>{
+        const msg = JSON.parse(ev.data);
+        if(msg.op===0){ // Hello
+          const needAuth = msg.d.authentication && msg.d.authentication.challenge;
+          let identify = {rpcVersion: msg.d.rpcVersion||1};
+          if(needAuth){
+            const pass = $('obs-pass').value||'';
+            const salt = msg.d.authentication.salt;
+            const challenge = msg.d.authentication.challenge;
+            const s1 = await sha256(pass + salt);
+            const s2 = await sha256(atob(s1) + challenge);
+            identify.authentication = s2;
+          }
+          sendFrame({op:1, d:identify});
+        } else if(msg.op===2){ // Identified
+          session = true;
+          // get current scene name
+          request('GetCurrentProgramScene');
+        } else if(msg.op===7 && msg.d.requestType==='GetCurrentProgramScene'){
+          sceneName = msg.d.responseData.currentProgramSceneName || msg.d.responseData.sceneName || msg.d.responseData.name;
+          startPreviewLoop();
+        } else if(msg.op===7 && msg.d.requestType==='GetSourceScreenshot'){
+          const dataUrl = msg.d.responseData.imageData;
+          if($('obs-bg-toggle').checked){
+            obsBg.src = dataUrl;
+            obsBg.hidden = false;
+          }
+        }
+      };
+      sock.onclose = ()=> stopObs();
+    }catch(e){
+      stopObs();
+      console.warn('OBS connect error', e);
+    }
+  });
+
+  function startPreviewLoop(){
+    if(timer) clearInterval(timer);
+    const fps = Math.max(1, Math.min(5, Number($('obs-fps').value)||2));
+    const period = 1000/fps;
+    timer = setInterval(()=>{
+      if(!session || !sceneName) return;
+      request('GetSourceScreenshot', {
+        sourceName: sceneName,
+        imageFormat: 'png',
+        imageWidth: 1920,
+        imageHeight: 1080,
+        imageCompressionQuality: 100
+      });
+    }, period);
+  }
+})();
+</script>
+</body>
+</html>
